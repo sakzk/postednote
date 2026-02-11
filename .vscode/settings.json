@@ -1,0 +1,32 @@
+{
+    // paste image 用の設定
+    // .mdで画像をインライン表示する
+    // 画像はすべて /note/images/ に放り込む
+    "pasteImage.path": "${projectRoot}/images",
+    "pasteImage.basePath": "${currentFileDir}",
+    "pasteImage.namePrefix": "img_",
+    "pasteImage.defaultName": "Y-MM-DD-HH-mm-ss",
+    "pasteImage.forceUnixStyleSeparator": true,
+    "pasteImage.insertPattern": "![${imageFileName}](${imageFilePath})",
+
+    // python用の設定
+    // Pythonファイル保存時にフォーマットを実行する
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit" // isortによるimport整理も同時にやる
+        }
+    },
+    // Blackの設定
+    "black-formatter.args": [
+        "--line-length", "120"
+    ],
+    // isortの設定
+    "isort.args": [
+        "--profile", "black" // Blackと競合しないプロファイル
+    ],
+    "files.exclude": {
+        "**/.git": false
+    }
+}

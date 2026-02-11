@@ -1,0 +1,23 @@
+{
+    "archive_file": "archive.md",
+    "template_file": "templates/archive.md",
+    "sections": [
+        {
+            "dir": "posts",
+            "title": "Posts",
+            "description": "技術記事･実験レポート･読書感想"
+        }
+    ],
+    "sections_excluded": [
+        {
+            "dir": "slogs",
+            "title": "Slogs (Daily Logs)",
+            "description": "日々の作業ログ･デバッグ記録"
+        },
+        {
+            "dir": "system-prompts",
+            "title": "System Prompts",
+            "description": "AIプロンプトエンジニアリング"
+        }
+    ]
+}

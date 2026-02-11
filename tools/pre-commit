@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+import json
+import subprocess
+import sys
+from pathlib import Path
+from typing import List
+
+# --- Configuration ---
+# NOTE: Resolve symlink to handle execution from .git/hooks/
+SCRIPT_PATH = Path(__file__).resolve()
+PROJECT_ROOT = SCRIPT_PATH.parents[1]
+
+CONFIG_FILE = PROJECT_ROOT / "config.json"
+GENERATE_SCRIPT = PROJECT_ROOT / "tools" / "generate_archive.py"
+ARCHIVE_FILE = "archive.md"
+
+
+def get_target_dirs() -> List[str]:
+    """Load monitoring directories from config.json"""
+    try:
+        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+            return [s["dir"] for s in json.load(f).get("sections", [])]
+    except Exception as e:
+        sys.exit(f"❌ [Error] Failed to load config: {e}")
+
+
+def get_staged_files() -> List[str]:
+    """Get list of staged files using git diff"""
+    try:
+        cmd = ["git", "diff", "--cached", "--name-only"]
+        res = subprocess.run(cmd, cwd=PROJECT_ROOT, capture_output=True, text=True, check=True)
+        return res.stdout.strip().splitlines()
+    except subprocess.CalledProcessError:
+        sys.exit("❌ [Error] Failed to get staged files.")
+
+
+def main():
+    targets = get_target_dirs()
+    staged = get_staged_files()
+
+    # Also monitor config and templates for changes
+    targets.extend(["config.json", "templates"])
+
+    # Check if any staged file starts with a target directory
+    # Using any() for cleaner, grep-friendly logic
+    should_update = any(f.startswith(t) for f in staged for t in targets)
+
+    if should_update:
+        print(f"📝 [Info] Blog content changed. Updating archive.md...")
+        try:
+            # 1. Regenerate Archive
+            subprocess.run(["python3", str(GENERATE_SCRIPT)], cwd=PROJECT_ROOT, check=True)
+            # 2. Add Archive to staging
+            subprocess.run(["git", "add", ARCHIVE_FILE], cwd=PROJECT_ROOT, check=True)
+        except subprocess.CalledProcessError:
+            # Abort commit on failure
+            sys.exit("❌ [Error] Failed to update archive.md. Commit aborted.")
+
+
+if __name__ == "__main__":
+    main()
+
+# --- How to Test (Manual Verification) ---
+#
+# 1. Success Case (Should update archive.md):
+#    $ touch posts/test_hook.md
+#    $ git add posts/test_hook.md
+#    $ git commit -m "test hook"
+#    => Expect: "📝 [Info] Blog content changed..." and commit succeeds.
+#
+# 2. Failure Case (Should BLOCK commit):
+#    $ echo "BROKEN_JSON" > config.json
+#    $ git add config.json
+#    $ git commit -m "break config"
+#    => Expect: "❌ [Error]..." and commit ABORTS.
+#    (Don't forget to restore config.json afterwards: git checkout config.json)
