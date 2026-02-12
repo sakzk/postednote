@@ -1,8 +1,8 @@
-# Archives
+
+主にソフトウェア関連の技術メモと雑多な読書感想
 
 ---
-## Recents 
-最新の10件
+## Recents <small>最新の10件</small>
 {recents}
 
 ---
@@ -10,6 +10,6 @@
 
 ---
 
-[← Back to Profile (README)](../README.md)
+[← Back to Profile (README)](./README.md)
 
 *Last Updated: {updated_at}*
