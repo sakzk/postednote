@@ -111,7 +111,7 @@ Python 3.14 のドキュメントには以下のように記載されていま�
 
 
 ### B. CPythonにおけるabspath(), realpath(), pathlib.Path.resolve()の内部実装
-TBD
+調査後追加する
 
 
 ## 自分用メモ
