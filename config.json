@@ -1,6 +1,6 @@
 {
-    "archive_file": "archive.md",
-    "template_file": "templates/archive.md",
+    "index_file": "index.md",
+    "template_file": "templates/index.md",
     "sections": [
         {
             "dir": "posts",

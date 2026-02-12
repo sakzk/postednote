@@ -66,8 +66,8 @@ def main():
     print("Loading config...")
     config = load_config()
 
-    archive_file = os.path.join(ROOT_DIR, config.get("archive_file", "archive.md"))
-    template_file = os.path.join(ROOT_DIR, config.get("template_file", "templates/archive.md"))
+    index_file = os.path.join(ROOT_DIR, config.get("index_file", "index.md"))
+    template_file = os.path.join(ROOT_DIR, config.get("template_file", "templates/index.md"))
     sections = config.get("sections", [])
 
     print("Scanning posts...")
@@ -122,10 +122,10 @@ def main():
             recents=recents_body, body="\n".join(section_bodies), updated_at=now  # ここに追加
         )
 
-        with open(archive_file, "w", encoding="utf-8") as f:
+        with open(index_file, "w", encoding="utf-8") as f:
             f.write(final_content)
 
-        print(f"✅ Updated: {archive_file} (Recents: {len(recent_10)} items)")
+        print(f"✅ Updated: {index_file} (Recents: {len(recent_10)} items)")
 
     except FileNotFoundError:
         print(f"❌ Error: Template not found at {template_file}")

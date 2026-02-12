@@ -11,8 +11,8 @@ SCRIPT_PATH = Path(__file__).resolve()
 PROJECT_ROOT = SCRIPT_PATH.parents[1]
 
 CONFIG_FILE = PROJECT_ROOT / "config.json"
-GENERATE_SCRIPT = PROJECT_ROOT / "tools" / "generate_archive.py"
-ARCHIVE_FILE = "archive.md"
+GENERATE_SCRIPT = PROJECT_ROOT / "tools" / "generate_index.py"
+ARCHIVE_FILE = "index.md"
 
 
 def get_target_dirs() -> List[str]:
@@ -46,7 +46,7 @@ def main():
     should_update = any(f.startswith(t) for f in staged for t in targets)
 
     if should_update:
-        print(f"📝 [Info] Blog content changed. Updating archive.md...")
+        print(f"📝 [Info] Blog content changed. Updating index.md...")
         try:
             # 1. Regenerate Archive
             subprocess.run(["python3", str(GENERATE_SCRIPT)], cwd=PROJECT_ROOT, check=True)
@@ -54,7 +54,7 @@ def main():
             subprocess.run(["git", "add", ARCHIVE_FILE], cwd=PROJECT_ROOT, check=True)
         except subprocess.CalledProcessError:
             # Abort commit on failure
-            sys.exit("❌ [Error] Failed to update archive.md. Commit aborted.")
+            sys.exit("❌ [Error] Failed to update index.md. Commit aborted.")
 
 
 if __name__ == "__main__":
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
 # --- How to Test (Manual Verification) ---
 #
-# 1. Success Case (Should update archive.md):
+# 1. Success Case (Should update index.md):
 #    $ touch posts/test_hook.md
 #    $ git add posts/test_hook.md
 #    $ git commit -m "test hook"
